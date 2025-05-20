@@ -1,5 +1,6 @@
 import NavBar from "../Componentes/NavBar";
 import ProviderCarrito from "../Provider/ProviderCarrito";
+import ProviderProducto from "../Provider/ProviderProducto";
 
 export default function  LayoutProducto({
  children

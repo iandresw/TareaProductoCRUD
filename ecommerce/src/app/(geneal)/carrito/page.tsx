@@ -13,7 +13,7 @@ export default function page() {
     <>
       <div className='container'>
 
-        <Carrusel></Carrusel>
+   
 
 
         <div className='row'>

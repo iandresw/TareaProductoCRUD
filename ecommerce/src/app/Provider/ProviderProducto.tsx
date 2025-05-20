@@ -1,7 +1,6 @@
 'use client'
 import React, { useContext, useEffect, useState } from 'react'
 import { PlantillaReact } from '../Modelos/PlantillaReact'
-import { contextCarrito } from '../Contexto/ContextCarrito'
 import { contextProducto } from '../Contexto/ContextProducto'
 
 import { Producto } from '../Modelos/Producto'
@@ -10,7 +9,7 @@ import { Producto } from '../Modelos/Producto'
 //dar funcionalidad a la definicion del contexto
 //exportar contexto
 
-export default function ProviderCarrito({children}:PlantillaReact) {
+export default function ProviderProducto({children}:PlantillaReact) {
 
  const [producto, setProducto]= useState<Producto[]>([]);
 
@@ -19,7 +18,6 @@ export default function ProviderCarrito({children}:PlantillaReact) {
 
  async function cargarProducto(){
     try{
-
         const respuesrta= await fetch(urlApi)
         const data= await respuesrta.json();
         setProducto(data);
@@ -30,9 +28,7 @@ export default function ProviderCarrito({children}:PlantillaReact) {
  }
 
  async function  guardarProducto(prodcuto:Producto) {
-    
     try {
-        
         const respuesta= await fetch(urlApi,{
             method:'POST',
             headers:{
@@ -40,37 +36,61 @@ export default function ProviderCarrito({children}:PlantillaReact) {
             },
             body:JSON.stringify(prodcuto)
         })
-
         const data= await respuesta.json();
-
         alert("Agregado Correctamente")
-
     } catch (error) {
         alert("Ocurrio un error al guardar Producto")
     }
  }
 
- const [productoCarrito, setProductoCarrito]= useState<Producto[]>([]);
- 
- function agregarCarrito(producto:Producto){
-        alert('prodcuto agregado al carrito')
-        setProductoCarrito([...productoCarrito,producto])
+  async function  deleteProducto(id:number) {
+    try {
+        const respuesta= await fetch(urlApi,{
+            method:'DELETE',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(id)
+        })
+        const data= await respuesta.json();
+        alert("Producto eliminado!")
+    } catch (error) {
+        alert("Ocurrio un error al eliminar el Producto")
+    }
  }
 
+  async function  editProducto(prodcuto:Producto) {
+    try {
+        const respuesta= await fetch(urlApi,{
+            method:'PUT',
+            headers:{
+                'Content-Type':'application/json'
+            },
+            body:JSON.stringify(prodcuto)
+        })
+        const data= await respuesta.json();
+        alert("Agregado Editado")
+    } catch (error) {
+        alert("Ocurrio un error al editar Producto")
+    }
+ }
+
+
  useEffect(()=>{
-        console.log(productoCarrito)
- },[productoCarrito])
+        console.log(producto)
+ },[producto])
 
   return (
-    <contextCarrito.Provider value={{producto,productoCarrito,setProductoCarrito,agregarCarrito,cargarProducto,guardarProducto}}>
+    <contextProducto.Provider value={{producto, cargarProducto, editProducto, deleteProducto,guardarProducto}}>
         {children}
-    </contextCarrito.Provider>
+    </contextProducto.Provider>
    
   )
 }
 
 
-export function useContextCarrito(){
+
+export function useContextProducto(){
     //hook
-    return useContext(contextCarrito)
+    return useContext(contextProducto)
 }
